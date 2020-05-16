@@ -4,10 +4,10 @@ from django.db import models
 
 class Profile(models.Model):
     avatar = models.ImageField(null=True, blank=True, upload_to='user_pics', verbose_name='Аватар')
-    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE, verbose_name='Пользователь', null=True, blank=True)
 
     def __str__(self):
-        return self.user.get_full_name() + "'s Profile"
+        return self.user
 
     class Meta:
         verbose_name = 'Профиль'
