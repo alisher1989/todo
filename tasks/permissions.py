@@ -8,8 +8,11 @@ from tasks.models import Task
 
 class IsTaskOwner(BasePermission):
     def has_permission(self, request, view):
-        if request.method == 'GET' or 'POST':
+        if request.method in ['GET', 'PUT']:
             return True
-        else:
-            instance = Task.objects.get(pk=view.kwargs['pk'])
-            return request.user == instance.created_by
+        # elif request.method in ['PUT', 'DELETE']:
+        #     instance = Task.objects.get(pk=view.kwargs['pk'])
+        #     return instance.created_by == request.user
+        elif request.method == 'POST' and request.user.is_anonymous:
+            return False
+        return True

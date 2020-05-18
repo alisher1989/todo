@@ -14,10 +14,15 @@ from accounts.views import MyProfileView
 
 class RegistrationTestCase(APITestCase):
 
-    def test_registration(self):
+    def test_registration_successfull(self):
         data = {"username": "testcase", "email": "testcase@test.com", "password1": "qwerty", "password2": "qwerty"}
         response = self.client.post("/rest-auth/registration/", data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_unsuccessfull_registration(self):
+        data = {"email": "testcase@test.com", "password1": "qwerty", "password2": "qwerty"}
+        response = self.client.post("/rest-auth/registration/", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileViewSetTestCase(APITestCase):
@@ -31,19 +36,7 @@ class ProfileViewSetTestCase(APITestCase):
         self.api_authentication()
 
     def api_authentication(self):
-        self.client.credentials(HTTP_AUTHERIZATION="Token " + self.token.key)
-
-    # def test_login(self):
-    #     data = {"username": self.user.username, "password": "qwerty"}
-    #     request = self.factory.put('/rest-auth/login/', data)
-    #     # force_authenticate(request, user=self.user)
-    #     response = self.client.login(username=self.user.username, password="qwerty")
-    #     # response.render()
-    #     print(response.data)
-    #     # self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # self.assertEqual(response.data, data)
-    #     print(status.HTTP_200_OK)
-
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
 
     def test_profile_detail_retrieve(self):
         request = self.factory.get('/profile/1')

@@ -30,6 +30,6 @@ class MultipleTaskSerializer(serializers.Serializer):
     def create(self, validated_data):
         request = self.context['request']
         for i in validated_data['tasks']:
-            Task.objects.create(title=i['title'], description=i['description'], status=i['status'], created_by=request.user)
+            Task.objects.create(body=i['body'], status=i['status'], created_by=request.user)
         return validated_data
 
