@@ -11,7 +11,7 @@ class MyProfileView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    lookup_field = 'pk'
+    lookup_field = "pk"
 
 
 

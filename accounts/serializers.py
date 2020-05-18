@@ -25,7 +25,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         request = self.context['request']
-        instance.avatar = validated_data.pop('avatar')
+        instance.description = validated_data.pop('description')
         instance.user = request.user
         instance.save()
         return instance

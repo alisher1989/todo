@@ -129,7 +129,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 
 REST_AUTH_REGISTER_SERIALIZERS = {
