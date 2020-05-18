@@ -1,11 +1,8 @@
 import json
 from django.contrib.auth.models import User
 from django.urls import reverse
-from rest_auth.tests.mixins import APIClient
-from rest_auth.views import LoginView
 from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
-from rest_framework.test import APITestCase, APIRequestFactory, force_authenticate
+from rest_framework.test import APITestCase, APIRequestFactory
 from rest_framework import status
 from accounts.models import Profile
 from tasks.models import Task
@@ -27,15 +24,14 @@ class TasksViewSetTestCase(APITestCase):
 
     def test_create_task_success(self):
         self.api_authentication()
-        expected_title = 'first'
-        data = {"title": expected_title, "description": "first desc", "status": "active", "created_by": "1", "task_user": [1]}
+        expected_body = 'tttt'
+        data = {"body": expected_body, "description": "first desc", "status": "active", "created_by": "1", "task_user": [1]}
         url = reverse('task_list')
         response = self.client.post(url, data=data, format='json')
         print(response.json())
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Task.objects.last().title, expected_title)
-        self.assertEqual(Task.objects.count(), 1)
-        print(status.HTTP_201_CREATED)
+        self.assertEqual(Task.objects.last().body, expected_body)
+        self.assertEqual(Task.objects.count(), 2)
 
     def test_create_task_unsuccess(self):
         expected_title = 'first'
@@ -51,7 +47,6 @@ class TasksViewSetTestCase(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Task.objects.last().body, expected_body)
-        print(status.HTTP_200_OK)
 
     def test_task_detail_update(self):
         self.api_authentication()
@@ -62,15 +57,20 @@ class TasksViewSetTestCase(APITestCase):
         self.assertEqual(Task.objects.last().body, expected_body)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_task_delete(self):
+        self.api_authentication()
+        url = reverse('task_detail', kwargs={"pk": self.task.pk})
+        response = self.client.delete(url)
+        self.assertEqual(Task.objects.count(), 0)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    # def test_create_multiple_task_success(self):
-    #     self.api_authentication()
-    #     # expected_title = 'first'
-    #     data = {"title": expected_title, "description": "first desc", "status": "active", "created_by": "1", "task_user": [1]}
-    #     url = reverse('multi_task')
-    #     response = self.client.post(url, data=data, format='json')
-    #     print(response.json())
-    #     # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     # self.assertEqual(Task.objects.last().title, expected_title)
-    #     # self.assertEqual(Task.objects.count(), 1)
-    #     print(status.HTTP_201_CREATED)
+    def test_create_multiple_task_success(self):
+        self.api_authentication()
+        data = {
+            "tasks": [{"body": "1", "status": "active", "task_user": []},
+                      {"body": "2", "status": "closed", "task_user": []},
+                      {"body": "3", "status": "active", "task_user": []}]
+                }
+        url = reverse('multi_task')
+        response = self.client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)

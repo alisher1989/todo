@@ -44,7 +44,6 @@ class ProfileViewSetTestCase(APITestCase):
         response = self.view(request, pk='1')
         response.render()
         self.assertEqual(response.data, {"id": 1, "description": None, "user": 1})
-        print(status.HTTP_200_OK)
 
     def test_profile_update_put(self):
         data = {"id": 1, "description": "test", "user": 1}
@@ -54,7 +53,6 @@ class ProfileViewSetTestCase(APITestCase):
         response.render()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, data)
-        print(status.HTTP_200_OK)
 
     def test_invalid_profile_update_put(self):
         invalid_data = {"id": self.profile.description, "description": 'test', "user": self.user.username}
@@ -64,4 +62,3 @@ class ProfileViewSetTestCase(APITestCase):
         response.render()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertNotEqual(response.data, invalid_data)
-        print(status.HTTP_400_BAD_REQUEST)
